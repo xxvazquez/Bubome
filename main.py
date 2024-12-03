@@ -13,7 +13,7 @@ if os.path.exists('credentials/your-firebase-key.json'):
     # Use JSON file for Replit
     cred = credentials.Certificate('credentials/your-firebase-key.json')
 else:
-    # Use environment variables for Vercel
+    # Use environment variables
     firebase_config = {
         "type": os.getenv("type"),
         "project_id": os.getenv("project_id"),
