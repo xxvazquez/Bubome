@@ -15,12 +15,12 @@ if os.path.exists('credentials/your-firebase-key.json'):
 else:
     # Use environment variables for Vercel
     firebase_config = {
-        "type": os.getenv("FIREBASE_TYPE"),
-        "project_id": os.getenv("FIREBASE_PROJECT_ID"),
-        "private_key_id": os.getenv("FIREBASE_PRIVATE_KEY_ID"),
-        "private_key": os.getenv("FIREBASE_PRIVATE_KEY").replace('\\n', '\n'),
-        "client_email": os.getenv("FIREBASE_CLIENT_EMAIL"),
-        "client_id": os.getenv("FIREBASE_CLIENT_ID"),
+        "type": os.getenv("type"),
+        "project_id": os.getenv("project_id"),
+        "private_key_id": os.getenv("private_key_id"),
+        "private_key": os.getenv("private_key").replace('\\n', '\n'),
+        "client_email": os.getenv("client_email"),
+        "client_id": os.getenv("client_id"),
     }
     cred = credentials.Certificate(firebase_config)
 # Debug log to check environment variables
@@ -41,7 +41,6 @@ try:
         print("Firestore connection seems okay, but no data found.")
 except Exception as e:
     print(f"Firestore connection error: {e}")
-
 
 app = Flask(__name__, template_folder='.')
 
