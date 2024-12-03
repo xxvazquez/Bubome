@@ -12,25 +12,38 @@ load_dotenv()
 if os.getenv("PRIVATE_KEY") and os.getenv("CLIENT_EMAIL"):
     # Use environment variables from Netlify (ensure they are uppercase)
     firebase_config = {
-        "type": os.getenv("TYPE"),
-        "project_id": os.getenv("PROJECT_ID"),
-        "private_key_id": os.getenv("PRIVATE_KEY_ID"),
-        "private_key": os.getenv("PRIVATE_KEY").replace('\\n', '\n'),
-        "client_email": os.getenv("CLIENT_EMAIL"),
-        "client_id": os.getenv("CLIENT_ID"),
-        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-        "token_uri": "https://oauth2.googleapis.com/token",
+        "type":
+        os.getenv("TYPE"),
+        "project_id":
+        os.getenv("PROJECT_ID"),
+        "private_key_id":
+        os.getenv("PRIVATE_KEY_ID"),
+        "private_key":
+        os.getenv("PRIVATE_KEY").replace('\\n', '\n')
+        if os.getenv("PRIVATE_KEY") else None,
+        "client_email":
+        os.getenv("CLIENT_EMAIL"),
+        "client_id":
+        os.getenv("CLIENT_ID"),
+        "auth_uri":
+        "https://accounts.google.com/o/oauth2/auth",
+        "token_uri":
+        "https://oauth2.googleapis.com/token",
         "auth_provider_x509_cert_url":
         "https://www.googleapis.com/oauth2/v1/certs",
-        "client_x509_cert_url": os.getenv("CLIENT_X509_CERT_URL")
+        "client_x509_cert_url":
+        os.getenv("CLIENT_X509_CERT_URL")
     }
-    cred = credentials.Certificate(firebase_config)
 
-if cred:
-    firebase_admin.initialize_app(cred)
-    print("Firebase app initialized successfully.")
+    # Ensure all required keys are available
+    if firebase_config["private_key"] and firebase_config["client_email"]:
+        cred = credentials.Certificate(firebase_config)
+        firebase_admin.initialize_app(cred)
+        print("Firebase app initialized successfully.")
+    else:
+        print("Error: Missing Firebase credentials.")
 else:
-    print("Error: Firebase credentials not found or incorrectly set.")
+    print("Error: Firebase credentials not found in environment variables.")
 
 # Debug log to check environment variables
 print("TYPE:", os.getenv("TYPE"))
