@@ -23,6 +23,7 @@ if firebase_key_path and os.path.exists(firebase_key_path):
         print("Firebase app initialized using file.")
     except Exception as e:
         print(f"Error initializing Firebase using the file: {e}")
+        db = None  # Ensure db is set to None in case of error
 else:
     print(
         "Firebase key file not found. Falling back to environment variables..."
@@ -64,13 +65,16 @@ else:
                 print(
                     f"Error initializing Firebase with environment variables: {e}"
                 )
+                db = None  # Ensure db is set to None in case of error
         else:
             print(
                 "Error: Missing Firebase credentials in environment variables."
             )
+            db = None  # Ensure db is set to None
     else:
         print(
             "Error: Firebase credentials not found in environment variables.")
+        db = None  # Ensure db is set to None
 
 # Initialize Flask app
 app = Flask(__name__, template_folder='.')
@@ -86,6 +90,9 @@ def home():
 @app.route('/products', methods=['GET'])
 def get_products():
     try:
+        if db is None:
+            raise Exception("Firebase Firestore client is not initialized.")
+
         inventory_ref = db.collection('inventory')
         docs = inventory_ref.stream()
 
@@ -116,6 +123,9 @@ def get_products():
 @app.route('/inventory')
 def inventory():
     try:
+        if db is None:
+            raise Exception("Firebase Firestore client is not initialized.")
+
         inventory_ref = db.collection('inventory')
         docs = inventory_ref.stream()
 
@@ -146,6 +156,9 @@ def inventory():
 @app.route('/delete-product/<product_id>', methods=['POST'])
 def delete_product(product_id):
     try:
+        if db is None:
+            raise Exception("Firebase Firestore client is not initialized.")
+
         # Deleting the product from Firestore
         db.collection('inventory').document(product_id).delete()
 
@@ -164,6 +177,9 @@ def add_product_page():
 @app.route('/add-product', methods=['POST'])
 def add_product():
     try:
+        if db is None:
+            raise Exception("Firebase Firestore client is not initialized.")
+
         # Get product data from the request
         data = request.get_json()
         product_name = data.get('product_name')
