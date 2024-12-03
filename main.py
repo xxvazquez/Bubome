@@ -2,9 +2,24 @@ from firebase_admin import credentials, firestore
 from flask import Flask, jsonify, request, render_template, redirect, url_for
 import firebase_admin
 from datetime import datetime
+import os
 
 # Initialize Firebase
-cred = credentials.Certificate("credentials/your-firebase-key.json")
+if os.path.exists('credentials/your-firebase-key.json'):
+    # Use JSON file for Replit
+    cred = credentials.Certificate('credentials/your-firebase-key.json')
+else:
+    # Use environment variables for Vercel
+    firebase_config = {
+        "type": os.getenv("FIREBASE_TYPE"),
+        "project_id": os.getenv("FIREBASE_PROJECT_ID"),
+        "private_key_id": os.getenv("FIREBASE_PRIVATE_KEY_ID"),
+        "private_key": os.getenv("FIREBASE_PRIVATE_KEY").replace('\\n', '\n'),
+        "client_email": os.getenv("FIREBASE_CLIENT_EMAIL"),
+        "client_id": os.getenv("FIREBASE_CLIENT_ID"),
+    }
+    cred = credentials.Certificate(firebase_config)
+
 firebase_admin.initialize_app(cred)
 
 # Initialize Firestore
