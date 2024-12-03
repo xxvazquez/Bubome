@@ -10,7 +10,7 @@ firebase_admin.initialize_app(cred)
 # Initialize Firestore
 db = firestore.client()
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='.')
 
 
 # Home route (renders index.html)
@@ -33,13 +33,10 @@ def get_products():
             expiration_date = product.get('Expiration date')
 
             if isinstance(expiration_date, str):
-                # If it's a string, ensure it's in the correct date format
                 product['Expiration date'] = expiration_date
             elif isinstance(expiration_date, datetime):
-                # If it's a datetime object, convert it to string
                 product['Expiration date'] = expiration_date.date().isoformat()
             elif isinstance(expiration_date, firestore.Timestamp):
-                # If it's a Firestore Timestamp, convert it to string
                 product['Expiration date'] = expiration_date.date().isoformat()
 
             products.append(product)
@@ -66,13 +63,10 @@ def inventory():
             expiration_date = product.get('Expiration date')
 
             if isinstance(expiration_date, str):
-                # If it's a string, ensure it's in the correct date format
                 product['Expiration date'] = expiration_date
             elif isinstance(expiration_date, datetime):
-                # If it's a datetime object, convert it to string
                 product['Expiration date'] = expiration_date.date().isoformat()
             elif isinstance(expiration_date, firestore.Timestamp):
-                # If it's a Firestore Timestamp, convert it to string
                 product['Expiration date'] = expiration_date.date().isoformat()
 
             products.append(product)
@@ -94,6 +88,35 @@ def delete_product(product_id):
 
         # Redirect to the inventory page after successful deletion
         return redirect(url_for('inventory'))
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# Route to handle adding a new product
+@app.route('/add-product', methods=['GET'])
+def add_product_page():
+    return render_template('add-product.html')
+
+
+@app.route('/add-product', methods=['POST'])
+def add_product():
+    try:
+        # Get product data from the request
+        data = request.get_json()
+        product_name = data.get('product_name')
+        expiration_date = data.get('expiration_date')
+        units = data.get('units')
+
+        # Add product to Firestore
+        db.collection('inventory').add({
+            'Product': product_name,
+            'Expiration date': expiration_date,
+            'Units': units
+        })
+
+        # Respond with success message
+        return jsonify({"message": "Product added successfully!"}), 200
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
