@@ -7,7 +7,7 @@ authors = ["Your Name <you@example.com>"]
 [tool.poetry.dependencies]
 python = ">=3.11.0,<3.12"
 flask = "^3.0.0"
-gunicorn = "^21.2.0"
+gunicorn = "^23.0.0"
 firebase-admin = "^6.6.0"
 xds-protos = "^1.68.1"
 
