@@ -20,10 +20,22 @@ else:
     }
     cred = credentials.Certificate(firebase_config)
 
+print(firebase_config)
+
 firebase_admin.initialize_app(cred)
 
 # Initialize Firestore
 db = firestore.client()
+
+try:
+    test_doc = db.collection('test').document('test_doc').get()
+    if test_doc.exists:
+        print("Firestore connection successful!")
+    else:
+        print("Firestore connection seems okay, but no data found.")
+except Exception as e:
+    print(f"Firestore connection error: {e}")
+
 
 app = Flask(__name__, template_folder='.')
 
