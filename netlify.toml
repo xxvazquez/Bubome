@@ -2,9 +2,13 @@
 PYTHON_VERSION = "3.11.9"
 
 [build]
-  command = "pip install -r requirements.txt && python main.py"
-  publish = "static"  # If you have static files in the 'static' directory
+  command = "pip install -r requirements.txt"  # Install dependencies
+  publish = "static"  # Publish static assets if any
 
 [dev]
-  command = "python main.py"  # Ensure that Netlify knows how to run your app locally
+  command = "python main.py"  # Ensure Netlify knows how to run your app locally
   port = 8888  # Set the appropriate port for local development
+
+# Optional: Use a custom build command for production
+[[plugins]]
+  package = "@netlify/plugin-functions-install-core"
