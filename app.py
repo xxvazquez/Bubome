@@ -6,61 +6,73 @@ from dotenv import load_dotenv
 import os
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(dotenv_path='credentials/.env')
 
-# Initialize Firebase
-if os.getenv("PRIVATE_KEY") and os.getenv("CLIENT_EMAIL"):
-    # Use environment variables from Netlify (ensure they are uppercase)
-    firebase_config = {
-        "type":
-        os.getenv("TYPE"),
-        "project_id":
-        os.getenv("PROJECT_ID"),
-        "private_key_id":
-        os.getenv("PRIVATE_KEY_ID"),
-        "private_key":
-        os.getenv("PRIVATE_KEY").replace('\\n', '\n')
-        if os.getenv("PRIVATE_KEY") else None,
-        "client_email":
-        os.getenv("CLIENT_EMAIL"),
-        "client_id":
-        os.getenv("CLIENT_ID"),
-        "auth_uri":
-        "https://accounts.google.com/o/oauth2/auth",
-        "token_uri":
-        "https://oauth2.googleapis.com/token",
-        "auth_provider_x509_cert_url":
-        "https://www.googleapis.com/oauth2/v1/certs",
-        "client_x509_cert_url":
-        os.getenv("CLIENT_X509_CERT_URL")
-    }
+# Check for Firebase credentials in environment
+firebase_key_path = os.getenv('FIREBASE_KEY_PATH')
+print(f"Firebase key path: {firebase_key_path}")
+print(f"Loaded FIREBASE_KEY_PATH: {os.getenv('FIREBASE_KEY_PATH')}")
 
-    # Ensure all required keys are available
-    if firebase_config["private_key"] and firebase_config["client_email"]:
-        cred = credentials.Certificate(firebase_config)
+# Initialize Firebase with the path to the key file if it exists
+if firebase_key_path and os.path.exists(firebase_key_path):
+    print(f"Using Firebase key file: {firebase_key_path}")
+    try:
+        cred = credentials.Certificate(firebase_key_path)
         firebase_admin.initialize_app(cred)
-        print("Firebase app initialized successfully.")
-    else:
-        print("Error: Missing Firebase credentials.")
+        db = firestore.client()  # Initialize Firestore client
+        print("Firebase app initialized using file.")
+    except Exception as e:
+        print(f"Error initializing Firebase using the file: {e}")
 else:
-    print("Error: Firebase credentials not found in environment variables.")
+    print(
+        "Firebase key file not found. Falling back to environment variables..."
+    )
+    # Fallback to environment variables if file is not found
+    if os.getenv("PRIVATE_KEY") and os.getenv("CLIENT_EMAIL"):
+        firebase_config = {
+            "type":
+            os.getenv("TYPE"),
+            "project_id":
+            os.getenv("PROJECT_ID"),
+            "private_key_id":
+            os.getenv("PRIVATE_KEY_ID"),
+            "private_key":
+            os.getenv("PRIVATE_KEY").replace('\\n', '\n')
+            if os.getenv("PRIVATE_KEY") else None,
+            "client_email":
+            os.getenv("CLIENT_EMAIL"),
+            "client_id":
+            os.getenv("CLIENT_ID"),
+            "auth_uri":
+            "https://accounts.google.com/o/oauth2/auth",
+            "token_uri":
+            "https://oauth2.googleapis.com/token",
+            "auth_provider_x509_cert_url":
+            "https://www.googleapis.com/oauth2/v1/certs",
+            "client_x509_cert_url":
+            os.getenv("CLIENT_X509_CERT_URL")
+        }
 
-# Debug log to check environment variables
-print("TYPE:", os.getenv("TYPE"))
-print("PROJECT_ID:", os.getenv("PROJECT_ID"))
-
-# Initialize Firestore
-db = firestore.client()
-
-try:
-    test_doc = db.collection('test').document('test_doc').get()
-    if test_doc.exists:
-        print("Firestore connection successful!")
+        # Ensure all required keys are available
+        if firebase_config["private_key"] and firebase_config["client_email"]:
+            try:
+                cred = credentials.Certificate(firebase_config)
+                firebase_admin.initialize_app(cred)
+                db = firestore.client()  # Initialize Firestore client
+                print("Firebase app initialized using environment variables.")
+            except Exception as e:
+                print(
+                    f"Error initializing Firebase with environment variables: {e}"
+                )
+        else:
+            print(
+                "Error: Missing Firebase credentials in environment variables."
+            )
     else:
-        print("Firestore connection seems okay, but no data found.")
-except Exception as e:
-    print(f"Firestore connection error: {e}")
+        print(
+            "Error: Firebase credentials not found in environment variables.")
 
+# Initialize Flask app
 app = Flask(__name__, template_folder='.')
 
 
