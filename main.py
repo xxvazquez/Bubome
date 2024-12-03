@@ -2,7 +2,11 @@ from firebase_admin import credentials, firestore
 from flask import Flask, jsonify, request, render_template, redirect, url_for
 import firebase_admin
 from datetime import datetime
+from dotenv import load_dotenv
 import os
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Initialize Firebase
 if os.path.exists('credentials/your-firebase-key.json'):
@@ -19,10 +23,12 @@ else:
         "client_id": os.getenv("FIREBASE_CLIENT_ID"),
     }
     cred = credentials.Certificate(firebase_config)
-
-print(firebase_config)
+# Debug log to check environment variables
+print("FIREBASE_TYPE:", os.getenv("FIREBASE_TYPE"))
+print("FIREBASE_PROJECT_ID:", os.getenv("FIREBASE_PROJECT_ID"))
 
 firebase_admin.initialize_app(cred)
+print("Firebase app initialized successfully.")
 
 # Initialize Firestore
 db = firestore.client()
