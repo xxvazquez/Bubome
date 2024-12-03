@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [build.environment]
 PYTHON_VERSION = "3.11.9"
 
@@ -12,3 +13,7 @@ PYTHON_VERSION = "3.11.9"
 # Optional: Use a custom build command for production
 [[plugins]]
   package = "@netlify/plugin-functions-install-core"
+=======
+[build]
+command = "pip install --upgrade pip && pip install -r requirements.txt && your_build_command"
+>>>>>>> parent of 64473e1 (Simplify requirements.txt by removing unused dependencies)
