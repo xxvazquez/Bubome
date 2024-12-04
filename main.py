@@ -11,8 +11,8 @@ db = None
 def initialize_firebase():
     global db
 
-    # Check if we are running on Render (by checking for the presence of FIREBASE_KEY_PATH)
-    if 'FIREBASE_KEY_PATH' in os.environ:
+    # Check if we are running on Render
+    if 'PRIVATE_KEY_ID' in os.environ:
         # Render environment: use environment variables for Firebase credentials
         firebase_config = {
             "type":
