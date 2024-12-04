@@ -1,185 +1,214 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Product</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Add Product</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                margin: 0;
+                padding: 0;
+            }
 
-        /* Styling for the Add Product form */
-        .form-container {
-            width: 300px;
-            margin: 50px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
+            /* Styling for the Add Product form */
+            .form-container {
+                width: 100%;
+                max-width: 400px; /* Set a maximum width */
+                margin: 50px auto;
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            }
 
-        /* Styling for the Add Product form */
-        h1 {
-            text-align: left;  /* Change this from 'center' to 'left' */
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 20px;  /* Add some margin below the title for spacing */
-        }
+            /* Styling for the Add Product form */
+            h1 {
+                text-align: left;
+                font-size: 24px;
+                color: #333;
+                margin-bottom: 20px;
+            }
 
-        label {
-            font-size: 16px;
-            color: #333;
-            display: block;
-            margin-bottom: 8px;
-        }
+            label {
+                font-size: 16px;
+                color: #333;
+                display: block;
+                margin-bottom: 8px;
+            }
 
-        input[type="text"], input[type="date"], input[type="number"] {
-            width: 100%;
-            max-width: 250px; /* Limit the width of the input fields */
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-            box-sizing: border-box; /* Ensure padding doesn't affect width */
-        }
+            input[type="text"],
+            input[type="date"],
+            input[type="number"] {
+                width: 100%;
+                max-width: 250px; /* Limit the width of the input fields */
+                padding: 10px;
+                margin-bottom: 15px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 16px;
+                box-sizing: border-box; /* Ensure padding doesn't affect width */
+            }
 
-        button {
-            background-color: #95b2a3;
-            color: white;
-            font-size: 18px;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            width: 100%;
-            cursor: pointer;
-        }
+            button {
+                background-color: #95b2a3;
+                color: white;
+                font-size: 18px;
+                padding: 10px;
+                border: none;
+                border-radius: 5px;
+                width: 100%; /* Make it stretch to the same width as the inputs */
+                max-width: 250px; /* Limit the width of the button to match inputs */
+                cursor: pointer;
+                font-size: 16px;
+                margin-top: 10px; /* Add some space between the last input and button */
+            }
 
-        button:hover {
-            background-color: #86a599;
-        }
+            button:hover {
+                background-color: #86a599;
+            }
 
-        /* Popup Styling */
-        .popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            text-align: center;
-        }
+            /* Popup Styling */
+            .popup {
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+                text-align: center;
+            }
 
-        .popup.active {
-            display: block;
-        }
+            .popup.active {
+                display: block;
+            }
 
-        .popup h2 {
-            margin-bottom: 15px;
-            color: #333;
-            font-weight: normal; /* Removed bold styling */
-            font-size: 16px; /* Smaller font size */
-        }
+            .popup h2 {
+                margin-bottom: 15px;
+                color: #333;
+                font-weight: normal;
+                font-size: 16px;
+            }
 
-        .popup button {
-            background-color: #95b2a3;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            margin-top: 10px;
-            font-size: 16px;
-        }
+            .popup button {
+                background-color: #95b2a3;
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                margin-top: 10px;
+                font-size: 16px;
+            }
 
-        .popup button:hover {
-            background-color: #86a599;
-        }
-    </style>
-</head>
-<body>
+            .popup button:hover {
+                background-color: #86a599;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="form-container">
+            <h1>Add a new product</h1>
 
-    <div class="form-container">
-        <h1>Add a new product</h1>
+            <!-- Product Form -->
+            <form id="addProductForm">
+                <label for="productName">Product Name:</label>
+                <input
+                    type="text"
+                    id="productName"
+                    name="product_name"
+                    required
+                />
 
-        <!-- Product Form -->
-        <form id="addProductForm">
-            <label for="productName">Product Name:</label>
-            <input type="text" id="productName" name="product_name" required>
+                <label for="expirationDate">Expiration Date:</label>
+                <input
+                    type="date"
+                    id="expirationDate"
+                    name="expiration_date"
+                    required
+                />
 
-            <label for="expirationDate">Expiration Date:</label>
-            <input type="date" id="expirationDate" name="expiration_date" required>
+                <label for="units">Units:</label>
+                <input
+                    type="number"
+                    id="units"
+                    name="units"
+                    value="1"
+                    required
+                />
 
-            <label for="units">Units:</label>
-            <input type="number" id="units" name="units" value="1" required>
+                <!-- Add Product Button -->
+                <button type="submit">Add Product</button>
+            </form>
+        </div>
 
-            <button type="submit">Add Product</button>
-        </form>
-    </div>
+        <!-- Success Popup -->
+        <div id="successPopup" class="popup">
+            <h2>Product added successfully!</h2>
+            <button id="okButton">OK</button>
+        </div>
 
-    <!-- Success Popup -->
-    <div id="successPopup" class="popup">
-        <h2>Product added successfully!</h2>
-        <button id="okButton">OK</button>
-    </div>
+        <script>
+            // Handle form submission
+            document
+                .getElementById("addProductForm")
+                .addEventListener("submit", function (event) {
+                    event.preventDefault();
 
-    <script>
-        // Handle form submission
-        document.getElementById('addProductForm').addEventListener('submit', function(event) {
-            event.preventDefault();
+                    // Get form data
+                    const productName =
+                        document.getElementById("productName").value;
+                    const expirationDate =
+                        document.getElementById("expirationDate").value;
+                    const units = document.getElementById("units").value;
 
-            // Get form data
-            const productName = document.getElementById('productName').value;
-            const expirationDate = document.getElementById('expirationDate').value;
-            const units = document.getElementById('units').value;
+                    const productData = {
+                        product_name: productName,
+                        expiration_date: expirationDate,
+                        units: units,
+                    };
 
-            const productData = {
-                product_name: productName,
-                expiration_date: expirationDate,
-                units: units
-            };
+                    // Send the data to the backend
+                    fetch("/add-product", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(productData),
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            if (data.message) {
+                                // Show success popup
+                                const successPopup =
+                                    document.getElementById("successPopup");
+                                successPopup.classList.add("active");
 
-            // Send the data to the backend
-            fetch('/add-product', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(productData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    // Show success popup
-                    const successPopup = document.getElementById('successPopup');
-                    successPopup.classList.add('active');
-                    
-                    // Redirect after 3 seconds
-                    setTimeout(() => {
-                        window.location.href = '/inventory';
-                    }, 3000);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('There was an error adding the product.');
-            });
-        });
+                                // Redirect after 3 seconds
+                                setTimeout(() => {
+                                    window.location.href = "/inventory";
+                                }, 3000);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Error:", error);
+                            alert("There was an error adding the product.");
+                        });
+                });
 
-        // Close popup on OK button click
-        document.getElementById('okButton').addEventListener('click', function() {
-            const successPopup = document.getElementById('successPopup');
-            successPopup.classList.remove('active');
-            window.location.href = '/inventory'; // Redirect to inventory immediately
-        });
-    </script>
-
-</body>
+            // Close popup on OK button click
+            document
+                .getElementById("okButton")
+                .addEventListener("click", function () {
+                    const successPopup =
+                        document.getElementById("successPopup");
+                    successPopup.classList.remove("active");
+                    window.location.href = "/inventory"; // Redirect to inventory immediately
+                });
+        </script>
+    </body>
 </html>

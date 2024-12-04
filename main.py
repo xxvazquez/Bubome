@@ -1,6 +1,6 @@
 from firebase_admin import credentials, firestore
-from flask import Flask, jsonify, request, render_template, redirect, url_for
 import firebase_admin
+from flask import Flask, jsonify, request, render_template, redirect, url_for
 from datetime import datetime
 import os
 
@@ -11,44 +11,59 @@ db = None
 def initialize_firebase():
     global db
 
-    # Firebase credentials from environment variables
-    firebase_config = {
-        "type":
-        os.getenv("TYPE"),
-        "project_id":
-        os.getenv("PROJECT_ID"),
-        "private_key_id":
-        os.getenv("PRIVATE_KEY_ID"),
-        "private_key":
-        os.getenv("PRIVATE_KEY").replace('\\n', '\n')
-        if os.getenv("PRIVATE_KEY") else None,
-        "client_email":
-        os.getenv("CLIENT_EMAIL"),
-        "client_id":
-        os.getenv("CLIENT_ID"),
-        "auth_uri":
-        "https://accounts.google.com/o/oauth2/auth",
-        "token_uri":
-        "https://oauth2.googleapis.com/token",
-        "auth_provider_x509_cert_url":
-        "https://www.googleapis.com/oauth2/v1/certs",
-        "client_x509_cert_url":
-        os.getenv("CLIENT_X509_CERT_URL")
-    }
+    # Check if we are running on Render (via environment variable presence)
+    if 'FIREBASE_KEY_PATH' in os.environ:
+        # Render environment: use environment variables
+        firebase_config = {
+            "type":
+            os.getenv("TYPE"),
+            "project_id":
+            os.getenv("PROJECT_ID"),
+            "private_key_id":
+            os.getenv("PRIVATE_KEY_ID"),
+            "private_key":
+            os.getenv("PRIVATE_KEY").replace('\\n', '\n')
+            if os.getenv("PRIVATE_KEY") else None,
+            "client_email":
+            os.getenv("CLIENT_EMAIL"),
+            "client_id":
+            os.getenv("CLIENT_ID"),
+            "auth_uri":
+            "https://accounts.google.com/o/oauth2/auth",
+            "token_uri":
+            "https://oauth2.googleapis.com/token",
+            "auth_provider_x509_cert_url":
+            "https://www.googleapis.com/oauth2/v1/certs",
+            "client_x509_cert_url":
+            os.getenv("CLIENT_X509_CERT_URL")
+        }
 
-    # Ensure all required environment variables are set
-    if all(firebase_config.values()):
+        # Ensure all required environment variables are set
+        if all(firebase_config.values()):
+            try:
+                # Initialize Firebase using environment variables
+                cred = credentials.Certificate(firebase_config)
+                firebase_admin.initialize_app(cred)
+                db = firestore.client()  # Initialize Firestore client
+                print("Firebase app initialized using environment variables.")
+            except Exception as e:
+                print(
+                    f"Error initializing Firebase with environment variables: {e}"
+                )
+        else:
+            print(
+                "Error: Missing Firebase credentials in environment variables."
+            )
+    else:
+        # Replit environment: use the local JSON key file
         try:
-            # Initialize Firebase using environment variables
-            cred = credentials.Certificate(firebase_config)
+            cred = credentials.Certificate(
+                'credentials/your-firebase-key.json')
             firebase_admin.initialize_app(cred)
             db = firestore.client()  # Initialize Firestore client
-            print("Firebase app initialized using environment variables.")
+            print("Firebase app initialized using service account JSON file.")
         except Exception as e:
-            print(
-                f"Error initializing Firebase with environment variables: {e}")
-    else:
-        print("Error: Missing Firebase credentials in environment variables.")
+            print(f"Error initializing Firebase with JSON file: {e}")
 
 
 # Initialize Firebase app and Firestore client
@@ -56,6 +71,8 @@ initialize_firebase()
 
 # Initialize Flask app
 app = Flask(__name__, template_folder='.')
+
+# -----------------------------------------------------------------
 
 
 # Home route (renders index.html)
