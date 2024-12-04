@@ -11,9 +11,9 @@ db = None
 def initialize_firebase():
     global db
 
-    # Check if we are running on Render (via environment variable presence)
+    # Check if we are running on Render (by checking for the presence of FIREBASE_KEY_PATH)
     if 'FIREBASE_KEY_PATH' in os.environ:
-        # Render environment: use environment variables
+        # Render environment: use environment variables for Firebase credentials
         firebase_config = {
             "type":
             os.getenv("TYPE"),
@@ -38,7 +38,7 @@ def initialize_firebase():
             os.getenv("CLIENT_X509_CERT_URL")
         }
 
-        # Ensure all required environment variables are set
+        # Ensure all environment variables are available
         if all(firebase_config.values()):
             try:
                 # Initialize Firebase using environment variables
@@ -54,11 +54,12 @@ def initialize_firebase():
             print(
                 "Error: Missing Firebase credentials in environment variables."
             )
+
     else:
         # Replit environment: use the local JSON key file
         try:
-            cred = credentials.Certificate(
-                'credentials/your-firebase-key.json')
+            cred = credentials.Certificate('credentials/your-firebase-key.json'
+                                           )  # Local JSON file path for Replit
             firebase_admin.initialize_app(cred)
             db = firestore.client()  # Initialize Firestore client
             print("Firebase app initialized using service account JSON file.")
@@ -196,4 +197,4 @@ def add_product():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
