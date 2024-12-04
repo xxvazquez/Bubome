@@ -71,7 +71,7 @@ def initialize_firebase():
 initialize_firebase()
 
 # Initialize Flask app
-app = Flask(__name__, template_folder='.')
+app = Flask(__name__, template_folder='templates/')
 
 # -----------------------------------------------------------------
 

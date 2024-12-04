@@ -1,7 +1,7 @@
 {
   "name": "Bubome",
   "short_name": "Bu",
-  "description": "An app to manage your inventory of products.",
+  "description": "An app to manage your life.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

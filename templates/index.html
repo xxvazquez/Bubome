@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Main Screen</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            /* Reset and Global Styles */
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                font-family: "Montserrat", Arial, sans-serif;
+                background: url("https://www.transparenttextures.com/patterns/wall-4-light.png"),
+                    #f4f4f4;
+                color: #333;
+                line-height: 1.6;
+                padding: 0;
+                margin: 0;
+            }
+
+            /* Logo Styles */
+            .logo-container {
+                position: absolute;
+                top: 20px;
+                left: 20px;
+            }
+
+            .logo {
+                height: 60px; /* Adjust logo size */
+                width: auto;
+            }
+
+            /* Container for Main Content */
+            .container {
+                max-width: 500px;
+                margin: 100px auto 20px; /* Added margin to move it down */
+                background-color: rgba(
+                    255,
+                    255,
+                    255,
+                    0.6
+                ); /* Slight transparency for frosted glass effect */
+                border-radius: 15px;
+                box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+                padding: 30px;
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            /* Welcome Message */
+            .welcome-message {
+                font-size: 28px;
+                font-weight: bold;
+                color: #333;
+            }
+
+            /* Instruction Message */
+            .instruction-message {
+                font-size: 18px;
+                color: #555;
+            }
+
+            /* Button Styles */
+            .btn {
+                background-color: #95b2a3; /* Olive green from your palette */
+                color: white;
+                padding: 12px 30px;
+                border-radius: 50px;
+                cursor: pointer;
+                font-size: 18px;
+                transition:
+                    background-color 0.3s ease,
+                    transform 0.3s ease;
+                border: none;
+            }
+
+            .btn:hover {
+                background-color: #7d8f80; /* Slightly darker olive green on hover */
+                transform: scale(1.05);
+            }
+
+            .btn:focus {
+                outline: none;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Logo on the left side of the screen -->
+        <div class="logo-container">
+            <img src="static/images/logo.png" alt="App Logo" class="logo" />
+        </div>
+
+        <div class="container">
+            <div class="welcome-message">Welcome, bubu!</div>
+            <div class="instruction-message">Where do we go from here?</div>
+            <button class="btn" onclick="window.location.href='/inventory'">
+                Bubinventory
+            </button>
+            <!-- Updated link -->
+            <button class="btn" onclick="window.location.href='/to-do'">
+                Bubu-do List
+            </button>
+            <!-- Updated link -->
+        </div>
+    </body>
+</html>
