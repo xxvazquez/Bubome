@@ -126,6 +126,37 @@
                 fill: #c9302c;
             }
 
+/* Add styles for the search section */
+.search-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+#search-input {
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 300px;
+}
+
+#search-btn {
+    padding: 10px;
+    background-color: rgba(149, 178, 163, 0.7);  /* Slight transparency */
+    color: white;
+    font-size: 14px;
+    border: none;
+    border-radius: 20px;  /* More rounded */
+    margin-left: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;  /* Smooth transition on hover */
+}
+
+#search-btn:hover {
+    background-color: rgba(134, 167, 143, 0.8);  /* Slightly darker on hover */
+}
+
     
             /* Modal Styles */
             .modal {

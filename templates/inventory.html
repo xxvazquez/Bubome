@@ -16,33 +16,34 @@
             <h1>Inventory</h1>
         </div>
 
+        <!-- Search Section -->
+        <div class="search-section">
+            <input
+                type="text"
+                id="search-input"
+                placeholder="Search products..."
+            />
+            <button id="search-btn">Search</button>
+        </div>
+
         <!-- Container for Table Section -->
         <div class="container">
-            <table>
+            <table id="product-table">
                 <thead>
                     <tr>
                         <th>Product</th>
                         <th>Expiration Date</th>
                         <th>Units</th>
                         <th></th>
-                        <!-- Empty header for buttons -->
                     </tr>
                 </thead>
                 <tbody>
                     {% for product in products %}
-                    <tr>
+                    <tr class="product-row">
                         <td>{{ product['Product'] }}</td>
                         <td>{{ product['Expiration date'] }}</td>
                         <td>{{ product['Units'] }}</td>
-                        <!-- Actions Section -->
-                        <td
-                            style="
-                                display: flex;
-                                align-items: center;
-                                gap: 10px;
-                            "
-                        >
-                            <!-- Delete Button Section -->
+                        <td>
                             <form
                                 id="delete-form-{{ product['id'] }}"
                                 action="/delete-product/{{ product['id'] }}"
@@ -110,6 +111,32 @@
             function closeDeleteModal() {
                 document.getElementById("delete-modal").style.display = "none";
             }
+
+            // Search functionality
+            document
+                .getElementById("search-btn")
+                .addEventListener("click", function () {
+                    const query = document
+                        .getElementById("search-input")
+                        .value.toLowerCase();
+                    const rows = document.querySelectorAll(".product-row");
+                    rows.forEach((row) => {
+                        const product = row.cells[0].innerText.toLowerCase();
+                        const expirationDate =
+                            row.cells[1].innerText.toLowerCase();
+                        const units = row.cells[2].innerText.toLowerCase();
+
+                        if (
+                            product.includes(query) ||
+                            expirationDate.includes(query) ||
+                            units.includes(query)
+                        ) {
+                            row.style.display = "";
+                        } else {
+                            row.style.display = "none";
+                        }
+                    });
+                });
         </script>
     </body>
 </html>
